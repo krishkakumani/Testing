@@ -1,12 +1,14 @@
-node {
-   def mavenHome = tool name: "maven3.6.2"
-   stage('Checkoutcode'){
-     git url: 'https://github.com/MithunTechnologiesDevOps/maven-web-application.git',branch: 'master'
-   }
-   
-   stage('Build'){
-      sh "${mavenHome}/bin/mvn clean package"
-   }
+node{
+    def buildNumber = BUILD_NUMBER
+    stage("Git CheckOut"){
+        git url: 'https://github.com/MithunTechnologiesDevOps/java-web-app-docker.git',branch: 'master'
+    }
+    
+    stage(" Maven Clean Package"){
+      def mavenHome =  tool name: "Maven-3.6.1", type: "maven"
+      def mavenCMD = "${mavenHome}/bin/mvn"
+      sh "${mavenCMD} clean package"
+    } 
 
    stage('SonarQubeserverReport'){
      withSonarQubeEnv('sonarqubeserver'){      
